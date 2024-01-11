@@ -4,6 +4,7 @@ from functools import cached_property
 from typing import Any, Generator, List
 import pandas as pd
 import sqlalchemy
+from sqlalchemy.inspection import inspect
 
 from prompt_formatters import TableColumn, Table
 
@@ -123,7 +124,8 @@ class SQLiteConnector:
     def get_tables(self) -> List[str]:
         """Get all tables in the database."""
         engine = sqlalchemy.create_engine(self.sqlite_uri)
-        table_names = engine.table_names()
+        inspector = inspect(engine)
+        table_names = inspector.get_table_names()
         engine.dispose()
         return table_names
 
